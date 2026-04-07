@@ -12,7 +12,6 @@ app.get("/", (req, res) => {
 app.post("/api/ttn", (req, res) => {
   console.log("Message TTN reçu !");
   console.log(req.body);
-
   res.status(200).send("OK");
 });
 

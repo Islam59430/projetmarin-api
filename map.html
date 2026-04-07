@@ -4,9 +4,43 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Suivi du bateau</title>
+
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    h2 {
+      margin: 10px;
+    }
+
+    #map {
+      height: 90vh;
+      width: 100%;
+    }
+  </style>
 </head>
 <body>
-  <h1>Suivi du bateau en temps réel</h1>
-  <p>La carte sera affichée ici.</p>
+  <h2>Suivi du bateau en temps réel</h2>
+  <div id="map"></div>
+
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script>
+    const lat = 48.8566;
+    const lon = 2.3522;
+
+    const map = L.map('map').setView([lat, lon], 13);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
+
+    L.marker([lat, lon]).addTo(map)
+      .bindPopup("Position du bateau")
+      .openPopup();
+  </script>
 </body>
 </html>
