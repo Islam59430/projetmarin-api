@@ -27,20 +27,54 @@
   <h2>Suivi du bateau en temps réel</h2>
   <div id="map"></div>
 
-  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-  <script>
-    const lat = 48.8566;
-    const lon = 2.3522;
+ <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 
-    const map = L.map('map').setView([lat, lon], 13);
+<script>
+  const map = L.map('map').setView([51.018471, 2.355795], 15);
 
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '&copy; OpenStreetMap contributors'
-    }).addTo(map);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; OpenStreetMap contributors'
+  }).addTo(map);
 
-    L.marker([lat, lon]).addTo(map)
-      .bindPopup("Position du bateau")
-      .openPopup();
-  </script>
+  const marker = L.marker([51.018471, 2.355795])
+    .addTo(map)
+    .bindPopup("Position du bateau")
+    .openPopup();
+
+  const protocol =
+    window.location.protocol === "https:" ? "wss" : "ws";
+
+  const socket = new WebSocket(
+    `${protocol}://${window.location.host}`
+  );
+
+  socket.onopen = () => {
+    console.log("WebSocket connecté");
+  };
+
+  socket.onmessage = (event) => {
+    const data = JSON.parse(event.data);
+
+    console.log("Nouvelle position :", data);
+
+    marker.setLatLng([
+      data.latitude,
+      data.longitude
+    ]);
+
+    map.setView([
+      data.latitude,
+      data.longitude
+    ], 15);
+
+    marker.bindPopup(
+      `Latitude : ${data.latitude}<br>Longitude : ${data.longitude}`
+    );
+  };
+
+  socket.onerror = (err) => {
+    console.error("Erreur WebSocket :", err);
+  };
+</script>
 </body>
 </html>
